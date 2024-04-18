@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -52,15 +53,17 @@ fun ShoppingListApp(){
     var itemName by remember { mutableStateOf("") }
     var itemQuantity by remember { mutableStateOf("") }
 
-    // Button add item
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
+        // BUTTON ADD ITEM
         Button(
             onClick = {showDialog = true},
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
+
             Text(text = "Add item")
         }
         LazyColumn(
@@ -156,7 +159,7 @@ fun ShoppingListApp(){
 @Composable
 fun shoppingItemEditor(item: ShoppingItem, onEditComplete: (String, Int) -> Unit){
     var editedName by remember { mutableStateOf(item.name) }
-    var editedQuantity by remember { mutableStateOf(item.name) }
+    var editedQuantity by remember { mutableStateOf(item.quantity.toString()) }
     var isEditing by remember { mutableStateOf(item.isEditing) }
 
     Row ( modifier = Modifier
@@ -166,14 +169,17 @@ fun shoppingItemEditor(item: ShoppingItem, onEditComplete: (String, Int) -> Unit
         horizontalArrangement = Arrangement.SpaceEvenly
     ){
         Column {
-            BasicTextField(
-                value = editedName,
-                onValueChange = {editedName = it},
-                singleLine = true,
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(8.dp)
-            )
+            Row {
+                BasicTextField(
+                    value = editedName,
+                    onValueChange = {editedName = it},
+                    singleLine = true,
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(8.dp)
+                )
+            }
+
             BasicTextField(
                 value = editedQuantity,
                 onValueChange = {editedQuantity = it},
@@ -212,17 +218,21 @@ fun shoppingListItem(
             horizontalArrangement = Arrangement.SpaceBetween
     ){
         Text(text = item.name, modifier = Modifier.padding(8.dp))
-        Text(text = "Qty: ${item.quantity}", modifier = Modifier.padding(8.dp))
+        Text(text = "Quantity: ${item.quantity}", modifier = Modifier.padding(8.dp))
+
+        // ROW WITH EDIT/DELETE BUTTON
         Row {
-            IconButton(onClick = { /*TODO*/ }) {
+            // EDIT BUTTON
+            IconButton(onClick =onEditClick) {
                 Icon(
                     Icons.Filled.Edit,
-                    contentDescription = "Upravit")
+                    contentDescription = "Edit")
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            // DELETE BUTTON
+            IconButton(onClick = onDeleteClick) {
                 Icon(
                     Icons.Filled.Delete,
-                    contentDescription = "Smazat",
+                    contentDescription = "Delete",
                     tint = Color.Red)
             }
         }
@@ -231,9 +241,3 @@ fun shoppingListItem(
     }
 }
 
-//Icon(
-//                Icons.Filled.Delete,
-//                contentDescription = "Smazat",
-//                tint = Color.Red, // Nastaví barvu ikony na červenou
-//
-//            )
